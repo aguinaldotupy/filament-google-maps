@@ -426,6 +426,10 @@ export default function filamentGoogleMapsField({
       this.updateFromLocation(this.markerLocation);
       this.map.panTo(this.markerLocation);
 
+      this.$wire.dispatch('location-updated', {
+        data: this.getCoordinates(),
+      })
+
       if (hasPlaceUpdatedUsing && event.placeId) {
         this.placesService.getDetails(
           {
@@ -669,8 +673,8 @@ export default function filamentGoogleMapsField({
           return geometryOnly
             ? new google.maps.Data.Point(overlay.getPosition())
             : {
-                geometry: new google.maps.Data.Point(overlay.getPosition()),
-              };
+              geometry: new google.maps.Data.Point(overlay.getPosition()),
+            };
         case google.maps.drawing.OverlayType.RECTANGLE:
           let b = overlay.getBounds(),
             p = [
@@ -688,33 +692,33 @@ export default function filamentGoogleMapsField({
           return geometryOnly
             ? new google.maps.Data.Polygon([p])
             : {
-                geometry: new google.maps.Data.Polygon([p]),
-              };
+              geometry: new google.maps.Data.Polygon([p]),
+            };
         case google.maps.drawing.OverlayType.POLYGON:
           return geometryOnly
             ? new google.maps.Data.Polygon([overlay.getPath().getArray()])
             : {
-                geometry: new google.maps.Data.Polygon([
-                  overlay.getPath().getArray(),
-                ]),
-              };
+              geometry: new google.maps.Data.Polygon([
+                overlay.getPath().getArray(),
+              ]),
+            };
         case google.maps.drawing.OverlayType.POLYLINE:
           return geometryOnly
             ? new google.maps.Data.LineString(overlay.getPath().getArray())
             : {
-                geometry: new google.maps.Data.LineString(
-                  overlay.getPath().getArray()
-                ),
-              };
+              geometry: new google.maps.Data.LineString(
+                overlay.getPath().getArray()
+              ),
+            };
         case google.maps.drawing.OverlayType.CIRCLE:
           return geometryOnly
             ? new google.maps.Data.Point(overlay.getCenter())
             : {
-                properties: {
-                  radius: overlay.getRadius(),
-                },
-                geometry: new google.maps.Data.Point(overlay.getCenter()),
-              };
+              properties: {
+                radius: overlay.getRadius(),
+              },
+              geometry: new google.maps.Data.Point(overlay.getCenter()),
+            };
       }
     },
 
@@ -937,21 +941,21 @@ export default function filamentGoogleMapsField({
             }
           }
           if (feature.getGeometry().getType() === 'MultiPolygon') {
-                let array = feature.getGeometry().getArray();
-                array.forEach(function(item,i){
+            let array = feature.getGeometry().getArray();
+            array.forEach(function (item, i) {
 
-                    let  coords = item.getAt(0).getArray();
-                    let poly = new google.maps.Polygon({
-                        paths: coords
-                    });
-                    if (google.maps.geometry.poly.containsLocation(latLng, poly)) {
-                        if (geoJsonProperty) {
-                            features.push(feature.getProperty(geoJsonProperty))
-                        } else {
-                            dataLayer.add(feature);
-                        }
-                    }
-                });
+              let coords = item.getAt(0).getArray();
+              let poly = new google.maps.Polygon({
+                paths: coords
+              });
+              if (google.maps.geometry.poly.containsLocation(latLng, poly)) {
+                if (geoJsonProperty) {
+                  features.push(feature.getProperty(geoJsonProperty))
+                } else {
+                  dataLayer.add(feature);
+                }
+              }
+            });
           }
         });
 
