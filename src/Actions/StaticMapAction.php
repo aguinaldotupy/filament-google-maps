@@ -4,9 +4,10 @@ namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
 use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
+use Filament\Actions\BulkAction;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Schemas\Components\Section;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Mastani\GoogleStaticMap\GoogleStaticMap;
@@ -28,7 +29,7 @@ class StaticMapAction extends BulkAction
 
         $this->modalHeading(fn (): string => __('filament-google-maps::fgm.static_map_action.modal.heading', ['label' => $this->getPluralModelLabel()]));
 
-        $this->modalButton(__('filament-google-maps::fgm.static_map_action.modal.label'));
+        $this->modalSubmitActionLabel(__('filament-google-maps::fgm.static_map_action.modal.label'));
 
         $this->successNotificationTitle(__('filament-google-maps::fgm.static_map_action.modal.success'));
 
@@ -38,8 +39,8 @@ class StaticMapAction extends BulkAction
 
         $this->requiresConfirmation();
 
-        $this->form([
-            Forms\Components\Card::make()->schema([
+        $this->schema([
+            Section::make()->schema([
                 Forms\Components\TextInput::make('width')
                     ->integer()
                     ->minValue(100)
